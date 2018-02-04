@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Scanner;
 
 public class Main {
 
@@ -11,7 +12,16 @@ public class Main {
         String user = "csc254";
         String password = "age126";
 
-        String queryString = "SELECT city, region, country, latitude, longitude FROM cities LIMIT 10";
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Please Enter a valid zipcode");
+        String s = input.next();
+        String zip = s.substring(0, 5);
+        Integer.parseInt(zip);
+        System.out.println("Selected Zip code: " + zip);
+
+        String queryString = "SELECT city, state_prefix, country, population, lat, lon, housingunits " +
+                "FROM zips WHERE zips.zip_code = '" + zip + "' ";
 
         try {
             conn = DriverManager.getConnection(host, user, password);
@@ -24,30 +34,19 @@ public class Main {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(queryString);
 
-
-            ResultSetMetaData rsMetaData = rs.getMetaData();
-            int numberOfColumns = rsMetaData.getColumnCount();
-
-            System.out.println("Number of columns: " + numberOfColumns);
-            for(int i = 1; i <= numberOfColumns; i++) {
-                System.out.printf("Column %2d: %s (%s)\n", i,
-                        rsMetaData.getColumnName(i),
-                        rsMetaData.getColumnTypeName(i));
-            }
-
             while (rs.next()) {
+                String city = rs.getString("city");
+                String state = rs.getString("state_prefix");
                 String country = rs.getString("country");
-                String name = rs.getString("city");
-                String region = rs.getString("region");
-                double latitude = rs.getDouble("latitude");
-                double longitude = rs.getDouble("longitude");
-                Place place = new Place(name, region, country, latitude, longitude);
+                String population = rs.getString("population");
+                int housing = rs.getInt("housingunits");
+                double latitude = rs.getDouble("lat");
+                double longitude = rs.getDouble("lon");
+                Place place = new Place(city, state, country, population, housing, latitude, longitude);
                 System.out.println(place);
-
             }
-
-
             conn.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

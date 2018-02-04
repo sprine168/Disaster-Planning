@@ -2,54 +2,54 @@ import java.util.Objects;
 
 public class Place {
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Place)) return false;
         Place place = (Place) o;
-        return Objects.equals(name, place.name) &&
-                Objects.equals(region, place.region);
+        return Objects.equals(city, place.city) &&
+                Objects.equals(state_prefix, place.state_prefix);
     }
 
-    @Override
-    public int hashCode() {
 
-        return Objects.hash(name, region);
-    }
-
-    String name;
-    String region;
+    String city;
+    String state_prefix;
     String country;
+    String population;
+    int housingUnits;
     double latitude;
     double longitude;
     double distanceFromOrigin;
 
-
-    public Place(String name, String region, String country, double latitude, double longitude) {
-        this.name = name;
-        this.region = region;
+    public Place(String city, String state_prefix, String country, String population,
+                 int housingUnits, double latitude, double longitude) {
+        this.city = city;
+        this.state_prefix = state_prefix;
         this.country = country;
+        this.population = population;
+        this.housingUnits = housingUnits;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.distanceFromOrigin = -1.0;
+        this.distanceFromOrigin = distanceFromOrigin;
+
 
     }
 
-    public String getName() {
-        return name;
+
+    public String getCity() {
+        return city;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public String getRegion() {
-        return region;
+    public String getState_prefix() {
+        return state_prefix;
     }
 
-    public void setRegion(String region) {
-        this.region = region;
+    public void setState_prefix(String state_prefix) {
+        this.state_prefix = state_prefix;
     }
 
     public String getCountry() {
@@ -58,6 +58,22 @@ public class Place {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public String getPopulation() {
+        return population;
+    }
+
+    public void setPopulation(String population) {
+        this.population = population;
+    }
+
+    public int getHousingUnits() {
+        return housingUnits;
+    }
+
+    public void setHousingUnits(int housingUnits) {
+        this.housingUnits = housingUnits;
     }
 
     public double getLatitude() {
@@ -76,23 +92,30 @@ public class Place {
         this.longitude = longitude;
     }
 
-    @Override
-    public String toString() {
-        return "Place{" +
-                "name='" + name + '\'' +
-                ", region='" + region + '\'' +
-                ", country='" + country + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", distanceFromOrigin=" + distanceFromOrigin +
-                '}';
-    }
-
     public double getDistanceFromOrigin() {
         return distanceFromOrigin;
     }
 
     public void setDistanceFromOrigin(double distanceFromOrigin) {
         this.distanceFromOrigin = distanceFromOrigin;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(city, state_prefix);
+    }
+
+    @Override
+    public String toString() {
+        return "Place{" +
+                "city='" + city + '\'' +
+                ", state_prefix='" + state_prefix + '\'' +
+                ", country='" + country + '\'' +
+                ", population=" + population +
+                ", housingUnits=" + housingUnits +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", distanceFromOrigin=" + distanceFromOrigin +
+                '}';
     }
 }
