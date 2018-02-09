@@ -26,12 +26,11 @@ public class Main {
         double distance = input.nextDouble();
         System.out.println("Selected Distance:" + distance);
 
-        String queryString = "SELECT city, state_prefix, country, population, housingunits, lat, lon FROM zips";
-        String queryString2 = "SELECT city, lat, zips2.long FROM zips2";
+        String queryString = "SELECT city, state_prefix, country, population, housingunits, lat, lon FROM zips WHERE '"+ zip + "'";
+        String queryString2 = "SELECT city, lat, zips2.long FROM zips2 WHERE '"+ zip + "' ";
 
         try {
             conn = DriverManager.getConnection(host, user, password);
-            conn2 = DriverManager.getConnection(host, user, password);
 
             if (conn == null)
                 System.out.println("Connect Failed:");
@@ -50,20 +49,26 @@ public class Main {
                 String country = rs.getString("country");
                 String population = rs.getString("population");
                 int housing = rs.getInt("housingunits");
-                double latitude = rs.getDouble("lat");
-                double longitude = rs.getDouble("lon");
+                double lat1 = rs.getDouble("lat");
+                double lon1 = rs.getDouble("lon");
 
 
                 while (rs2.next()) {
                     String city2 = rs2.getString("city");
                     double lat2 = rs2.getDouble("lat");
                     double lon2 = rs2.getDouble("long");
+                    kilometers(distance);
+
+                    if (lat1 == lat2 && lat1 == lat2 && haversine(lat1, lon1, lat2, lon2) < distance) {
+
+                        Place place = new Place(city, state, country, population, housing, lat1, lon1, distance);
+                        System.out.println(place);
+
+                    }
 
 
                 }
 
-                Place place = new Place(city, state, country, population, housing, latitude, longitude, distance);
-                System.out.println(place);
 
             }
 
@@ -73,7 +78,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
     public static double haversine(double lat1, double lon1, double lat2, double lon2) {
         final double r = 6372.8;
         double dlat = Math.toRadians(lat2 - lat1);
