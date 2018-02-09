@@ -26,8 +26,8 @@ public class Main {
         double distance = input.nextDouble();
         System.out.println("Selected Distance:" + distance);
 
-        String queryString = "SELECT city, state_prefix, country, population, housingunits, lat, lon FROM zips WHERE '"+ zip + "'";
-        String queryString2 = "SELECT city, lat, zips2.long FROM zips2 WHERE '"+ zip + "' ";
+        String queryString = "SELECT city, state_prefix, country, population, housingunits, lat, lon FROM zips WHERE zip_code = '" + zip + "' ";
+        String queryString2 = "SELECT city, state, zipcode, country, estimatedpopulation, locationtype, lat, zips2.long FROM zips2";
 
         try {
             conn = DriverManager.getConnection(host, user, password);
@@ -43,11 +43,14 @@ public class Main {
             stmt2 = conn.createStatement();
             rs2 = stmt2.executeQuery(queryString2);
 
+            double haversine = 0;
+
+
             while (rs.next()) {
                 String city = rs.getString("city");
                 String state = rs.getString("state_prefix");
                 String country = rs.getString("country");
-                String population = rs.getString("population");
+                int population = rs.getInt("population");
                 int housing = rs.getInt("housingunits");
                 double lat1 = rs.getDouble("lat");
                 double lon1 = rs.getDouble("lon");
@@ -55,29 +58,32 @@ public class Main {
 
                 while (rs2.next()) {
                     String city2 = rs2.getString("city");
+                    String state2 = rs2.getString("state");
+                    String zipcode = rs2.getString("zipcode");
+                    String country2 = rs2.getString("country");
+                    int estpopulat = rs2.getInt("estimatedpopulation");
                     double lat2 = rs2.getDouble("lat");
                     double lon2 = rs2.getDouble("long");
-                    kilometers(distance);
 
-                    if (lat1 == lat2 && lat1 == lat2 && haversine(lat1, lon1, lat2, lon2) < distance) {
 
-                        Place place = new Place(city, state, country, population, housing, lat1, lon1, distance);
-                        System.out.println(place);
+                    haversine = haversine(lat1, lon1, lat2, lon2);
+                    Place place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversine);
+
+                    if (haversine < distance) {
+//                        System.out.println("Starting point: " + place);
+                        System.out.println("Points withing distance" + place2);
 
                     }
-
-
                 }
-
-
             }
 
-            conn.close();
 
+            conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     public static double haversine(double lat1, double lon1, double lat2, double lon2) {
         final double r = 6372.8;
         double dlat = Math.toRadians(lat2 - lat1);
