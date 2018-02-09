@@ -1,4 +1,7 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class Main {
@@ -27,7 +30,7 @@ public class Main {
         System.out.println("Selected Distance:" + distance);
 
         String queryString = "SELECT city, state_prefix, country, population, housingunits, lat, lon FROM zips WHERE zip_code = '" + zip + "' ";
-        String queryString2 = "SELECT city, state, zipcode, country, estimatedpopulation, locationtype, lat, zips2.long FROM zips2";
+        String queryString2 = "SELECT DISTINCT city, state, zipcode, country, estimatedpopulation, locationtype, lat, zips2.long FROM zips2 WHERE locationtype = 'PRIMARY'";
 
         try {
             conn = DriverManager.getConnection(host, user, password);
@@ -44,6 +47,7 @@ public class Main {
             rs2 = stmt2.executeQuery(queryString2);
 
             double haversine = 0;
+            Place place2 = null;
 
 
             while (rs.next()) {
@@ -67,13 +71,12 @@ public class Main {
 
 
                     haversine = haversine(lat1, lon1, lat2, lon2);
-                    Place place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversine);
+                    place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversine);
 
-                    if (haversine < distance) {
-//                        System.out.println("Starting point: " + place);
-                        System.out.println("Points withing distance" + place2);
+                    if(distance >= haversine)
+                    System.out.println("Points withing distance" + place2);
 
-                    }
+
                 }
             }
 

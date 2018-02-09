@@ -2,14 +2,7 @@ import java.util.Objects;
 
 public class Place {
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Place)) return false;
-        Place place = (Place) o;
-        return Objects.equals(city, place.city) &&
-                Objects.equals(state_prefix, place.state_prefix);
-    }
+
 
     String city;
     String state_prefix;
@@ -128,7 +121,17 @@ public class Place {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Place)) return false;
+        Place place = (Place) o;
+        return Objects.equals(city, place.city) &&
+                Objects.equals(state_prefix, place.state_prefix);
+    }
+
+    @Override
     public int hashCode() {
+
         return Objects.hash(city, state_prefix);
     }
 
