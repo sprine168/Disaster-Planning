@@ -11,7 +11,6 @@ public class Place {
                 Objects.equals(state_prefix, place.state_prefix);
     }
 
-
     String city;
     String state_prefix;
     String country;
@@ -22,7 +21,8 @@ public class Place {
     double distanceFromOrigin;
 
     public Place(String city, String state_prefix, String country, String population,
-                 int housingUnits, double latitude, double longitude) {
+                 int housingUnits, double latitude, double longitude, double distanceFromOrigin) {
+
         this.city = city;
         this.state_prefix = state_prefix;
         this.country = country;
@@ -30,9 +30,7 @@ public class Place {
         this.housingUnits = housingUnits;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.distanceFromOrigin = distanceFromOrigin;
-
-
+        this.distanceFromOrigin = -1;
     }
 
 
@@ -109,7 +107,7 @@ public class Place {
     public String toString() {
         return "Place{" +
                 "city='" + city + '\'' +
-                ", state_prefix='" + state_prefix + '\'' +
+                ", state='" + state_prefix + '\'' +
                 ", country='" + country + '\'' +
                 ", population=" + population +
                 ", housingUnits=" + housingUnits +
