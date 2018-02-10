@@ -1,7 +1,10 @@
+/*
+ * Steven Prine
+ * CSC-346
+ * Prof. Noynaert
+ */
+
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.Scanner;
 
 public class Main {
@@ -33,7 +36,6 @@ public class Main {
         String queryString = "SELECT city, state_prefix, zip_code, country, population, housingunits, lat, lon FROM zips WHERE zip_code = '" + zip + "' ";
         String queryString2 = "SELECT zips2.city, state, zipcode, zips2.country, estimatedpopulation, housingunits, locationtype, zips2.lat, zips2.long FROM zips2 INNER JOIN zips ON zips2.zipcode = zips.zip_code WHERE locationtype = 'PRIMARY'";
 
-
         try {
             conn = DriverManager.getConnection(host, user, password);
 
@@ -48,40 +50,28 @@ public class Main {
             stmt2 = conn.createStatement();
             rs2 = stmt2.executeQuery(queryString2);
 
+            while (rs.next()) {
+                double lat1 = rs.getDouble("lat");
+                double lon1 = rs.getDouble("lon");
 
-            double haversineMiles = 0;
-            double haversineKilo = 0;
-            Place place2 = null;
-            Place placek = null;
+                while (rs2.next()) {
+                    String city2 = rs2.getString("city");
+                    String state2 = rs2.getString("state");
+                    String zipcode = rs2.getString("zipcode");
+                    int housing = rs2.getInt("housingunits");
+                    String country2 = rs2.getString("country");
+                    int estpopulat = rs2.getInt("estimatedpopulation");
+                    double lat2 = rs2.getDouble("lat");
+                    double lon2 = rs2.getDouble("long");
 
-            if (distance > 0) {
-                while (rs.next()) {
-                    String city = rs.getString("city");
-                    String zipy = rs.getString("zip_code");
-                    String state = rs.getString("state_prefix");
-                    String country = rs.getString("country");
-                    int population = rs.getInt("population");
-                    double lat1 = rs.getDouble("lat");
-                    double lon1 = rs.getDouble("lon");
+                    double haversineMiles = miles(haversine(lat1, lon1, lat2, lon2));
+                    Place place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversineMiles);
 
 
-                    while (rs2.next()) {
-                        String city2 = rs2.getString("city");
-                        String state2 = rs2.getString("state");
-                        String zipcode = rs2.getString("zipcode");
-                        int housing = rs2.getInt("housingunits");
-                        String country2 = rs2.getString("country");
-                        int estpopulat = rs2.getInt("estimatedpopulation");
-                        double lat2 = rs2.getDouble("lat");
-                        double lon2 = rs2.getDouble("long");
-
-                        haversineMiles = miles(haversine(lat1, lon1, lat2, lon2));
-
-                        if (distance >= haversineMiles) {
-                            place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversineMiles);
-                            System.out.println(place2);
-                        }
+                    if (distance >= haversineMiles) {
+                        System.out.println(place2);
                     }
+
                 }
             }
             conn.close();
@@ -90,7 +80,6 @@ public class Main {
             System.err.println("Something is afoot with the connection of doom");
         }
     }
-
 
     public static double haversine(double lat1, double lon1, double lat2, double lon2) {
         final double R = 6372.8; // In kilometers

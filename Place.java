@@ -1,3 +1,8 @@
+/*Steven Prine
+* CSC346
+* Prof. Noynaert
+*/
+
 import java.util.Objects;
 
 public class Place {
