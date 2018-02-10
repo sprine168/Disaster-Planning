@@ -2,8 +2,6 @@ import java.util.Objects;
 
 public class Place {
 
-
-
     String city;
     String state_prefix;
     String country;
@@ -13,8 +11,6 @@ public class Place {
     double latitude;
     double longitude;
     double distanceFromOrigin;
-
-
 
     public Place(String city, String zipCode, String state_prefix, String country, int population,
                  int housingUnits, double latitude, double longitude, double distanceFromOrigin) {
@@ -29,9 +25,6 @@ public class Place {
         this.longitude = longitude;
         this.distanceFromOrigin = distanceFromOrigin;
     }
-
-
-
 
     public String getCity() {
         return city;
@@ -134,5 +127,4 @@ public class Place {
 
         return Objects.hash(city, state_prefix);
     }
-
 }

@@ -29,8 +29,8 @@ public class Main {
         double distance = input.nextDouble();
         System.out.println("Selected Distance:" + distance);
 
-        String queryString = "SELECT city, state_prefix, country, population, housingunits, lat, lon FROM zips WHERE zip_code = '" + zip + "' ";
-        String queryString2 = "SELECT DISTINCT city, state, zipcode, country, estimatedpopulation, locationtype, lat, zips2.long FROM zips2 WHERE locationtype = 'PRIMARY'";
+        String queryString = "SELECT city, state_prefix, zip_code, country, population, housingunits, lat, lon FROM zips WHERE zip_code = '" + zip + "' ";
+        String queryString2 = "SELECT city, state, zipcode, country, estimatedpopulation, locationtype, lat, zips2.long FROM zips2 WHERE locationtype = 'PRIMARY'";
 
         try {
             conn = DriverManager.getConnection(host, user, password);
@@ -48,17 +48,18 @@ public class Main {
 
             double haversine = 0;
             Place place2 = null;
+            Place placek = null;
 
 
             while (rs.next()) {
                 String city = rs.getString("city");
+                String zipy = rs.getString("zip_code");
                 String state = rs.getString("state_prefix");
                 String country = rs.getString("country");
                 int population = rs.getInt("population");
                 int housing = rs.getInt("housingunits");
                 double lat1 = rs.getDouble("lat");
                 double lon1 = rs.getDouble("lon");
-
 
                 while (rs2.next()) {
                     String city2 = rs2.getString("city");
@@ -73,14 +74,11 @@ public class Main {
                     haversine = haversine(lat1, lon1, lat2, lon2);
                     place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversine);
 
-                    if(distance >= haversine)
-                    System.out.println("Points withing distance" + place2);
-
-
+                    if (distance >= haversine) {
+                        System.out.println(place2);
+                    }
                 }
             }
-
-
             conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -88,17 +86,16 @@ public class Main {
     }
 
     public static double haversine(double lat1, double lon1, double lat2, double lon2) {
-        final double r = 6372.8;
-        double dlat = Math.toRadians(lat2 - lat1);
-        double dlon = Math.toRadians(lon2 - lon1);
+        final double R = 6372.8; // In kilometers
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);
 
-        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.pow(Math.sin(dlon / 2), 2) * Math.cos(lat1) * Math.cos(lat2);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        return r * c;
+        return R * c;
     }
-
 
     public static double miles(double toMiles) {
         return toMiles * 0.621371;
