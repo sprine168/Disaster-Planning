@@ -109,7 +109,7 @@ public class Place {
                 ", housingUnits=" + housingUnits +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", distanceFromOrigin=" + distanceFromOrigin +
+                ", distanceFromOriginInMiles=" + distanceFromOrigin +
                 '}';
     }
 
