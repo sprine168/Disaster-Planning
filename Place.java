@@ -114,7 +114,8 @@ public class Place {
                 ", housingUnits=" + housingUnits +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", distanceFromOriginInMiles=" + distanceFromOrigin +
+                ", distance in miles=" + miles(distanceFromOrigin) +
+                ", distance in kilos=" + distanceFromOrigin +
                 '}';
     }
 
@@ -132,4 +133,9 @@ public class Place {
 
         return Objects.hash(city, state_prefix);
     }
+
+    public static double miles(double toMiles) {
+        return toMiles * 0.621371;
+    }
+
 }

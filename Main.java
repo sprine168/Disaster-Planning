@@ -31,10 +31,9 @@ public class Main {
         System.out.println("Please enter a distance from zipcode");
         double distance = input.nextDouble();
         System.out.println("Selected Distance:" + distance);
-        kilometers(distance);
 
         String queryString = "SELECT city, state_prefix, zip_code, country, population, housingunits, lat, lon FROM zips WHERE zip_code = '" + zip + "' ";
-        String queryString2 = "SELECT zips2.city, state, zipcode, zips2.country, estimatedpopulation, housingunits, locationtype, zips2.lat, zips2.long FROM zips2 INNER JOIN zips ON zips2.zipcode = zips.zip_code WHERE locationtype = 'PRIMARY'";
+        String queryString2 = "SELECT DISTINCT zips2.city, state, zipcode, zips2.country, estimatedpopulation, housingunits, locationtype, zips2.lat, zips2.long FROM zips2 INNER JOIN zips ON zips2.zipcode = zips.zip_code WHERE locationtype = 'PRIMARY' ORDER BY zips.city";
 
         try {
             conn = DriverManager.getConnection(host, user, password);
@@ -67,11 +66,9 @@ public class Main {
                     double haversineMiles = miles(haversine(lat1, lon1, lat2, lon2));
                     Place place2 = new Place(city2, zipcode, state2, country2, estpopulat, housing, lat2, lon2, haversineMiles);
 
-
                     if (distance >= haversineMiles) {
                         System.out.println(place2);
                     }
-
                 }
             }
             conn.close();
