@@ -1,6 +1,4 @@
 # Steven Prine
-# CSC-346
-# Prof. Noynaert	
 
 ### Deviation Memo
 
